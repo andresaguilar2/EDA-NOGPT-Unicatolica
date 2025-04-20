@@ -158,3 +158,42 @@ function buscarPorInicial() {
         });
     }
 }
+
+function eliminarPorInicial() {
+    const letra = document.getElementById("letraBusqueda").value.trim();
+
+    if (letra.length !== 1) {
+        alert("Ingrese una sola letra.");
+        return;
+    }
+
+    agenda.deleteByFirstLetter(letra);
+    mostrarContactos();
+}
+
+function mostrarContactos() {
+    const lista = document.getElementById("listaContactos");
+    lista.innerHTML = "";
+
+    let actual = agenda.head;
+
+    if (!actual) {
+        lista.innerHTML = "<li class='list-group-item'>Agenda vacía.</li>";
+        return;
+    }
+
+    while (actual) {
+        const li = document.createElement("li");
+        li.className = "list-group-item";
+        li.textContent = ${actual.nombre} ${actual.apellido};
+        lista.appendChild(li);
+        actual = actual.next;
+    }
+}
+
+function ordenarContactos() {
+    agenda.ordenar();
+    mostrarContactos();
+}
+
+
