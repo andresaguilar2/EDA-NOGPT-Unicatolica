@@ -89,3 +89,72 @@ class DoublyLinkedList {
             currentNode = nextNode;
         }
     }
+ordenar() {
+        if (!this.head || !this.head.next) return;
+
+        let nodesArray = [];
+        let current = this.head;
+
+        while (current !== null) {
+            nodesArray.push(current);
+            current = current.next;
+        }
+
+        nodesArray.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+        this.head = nodesArray[0];
+        this.head.previous = null;
+
+        for (let i = 0; i < nodesArray.length - 1; i++) {
+            nodesArray[i].next = nodesArray[i + 1];
+            nodesArray[i + 1].previous = nodesArray[i];
+        }
+
+        this.tail = nodesArray[nodesArray.length - 1];
+        this.tail.next = null;
+    }
+}
+
+const agenda = new DoublyLinkedList();
+
+function agregarContacto() {
+    const nombre = document.getElementById("nombre").value.trim();
+    const apellido = document.getElementById("apellido").value.trim();
+
+    if (!nombre || !apellido) {
+        alert("Por favor, complete ambos campos.");
+        return;
+    }
+
+    const nuevo = new DoublyLinkedListNode(nombre, apellido);
+    agenda.insertByFirstLetter(nuevo);
+
+    document.getElementById("nombre").value = "";
+    document.getElementById("apellido").value = "";
+
+    mostrarContactos();
+}
+
+function buscarPorInicial() {
+    const letra = document.getElementById("letraBusqueda").value.trim();
+    const lista = document.getElementById("listaContactos");
+    lista.innerHTML = "";
+
+    if (letra.length !== 1) {
+        alert("Ingrese una sola letra.");
+        return;
+    }
+
+    const resultados = agenda.searchByFirstLetter(letra);
+
+    if (resultados.length === 0) {
+        lista.innerHTML = "<li class='list-group-item'>No se encontraron contactos.</li>";
+    } else {
+        resultados.forEach(nodo => {
+            const li = document.createElement("li");
+            li.className = "list-group-item";
+            li.textContent = `${nodo.nombre} ${nodo.apellido}`;
+            lista.appendChild(li);
+        });
+    }
+}
